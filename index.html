@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TCP vs UDP Protocol Performance Analysis Dashboard</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+</head>
+
+<body class="bg-slate-900 text-slate-100 min-h-screen p-4 sm:p-6 font-sans antialiased">
+  <div class="max-w-7xl mx-auto space-y-6">
+
+    <!-- Header Banner -->
+    <header
+      class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-800 border border-slate-700 rounded-2xl p-6 shadow-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div>
+        <div class="flex items-center gap-2">
+          <span
+            class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-500/20 text-blue-300 border border-blue-500/30">BCA
+            Integrated Project</span>
+          <span
+            class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">IDCCN
+            &bull; R Programming &bull; CDA</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mt-2">
+          TCP vs UDP Protocol Performance Analysis
+        </h1>
+        <p class="text-slate-300 text-sm mt-1">
+          A Comparative Empirical Study of Throughput, Latency, Packet Loss, Jitter, and Reliability
+        </p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button onclick="document.getElementById('demoSection').scrollIntoView({behavior: 'smooth'})"
+          class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-lg text-sm shadow-md transition flex items-center gap-2">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+            <path d="M4 4l12 6-12 6z" />
+          </svg>
+          Test Packet Simulation
+        </button>
+      </div>
+    </header>
+
+    <!-- Top KPI Cards -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+      <!-- Metric 1: Throughput -->
+      <div class="bg-slate-800/80 border border-slate-700/80 rounded-xl p-4 shadow-sm">
+        <div class="text-xs font-medium text-slate-400 uppercase tracking-wider">Avg Throughput</div>
+        <div class="flex items-baseline justify-between mt-2">
+          <div class="text-lg font-bold text-blue-400" id="kpiTcpTp">39.2 <span
+              class="text-xs text-slate-400 font-normal">Mbps</span></div>
+          <div class="text-xs text-slate-400">vs</div>
+          <div class="text-lg font-bold text-rose-400" id="kpiUdpTp">45.1 <span
+              class="text-xs text-slate-400 font-normal">Mbps</span></div>
+        </div>
+        <div class="flex justify-between text-[11px] text-slate-500 mt-1">
+          <span class="text-blue-300">TCP (Reliable)</span>
+          <span class="text-rose-300">UDP (Fast)</span>
+        </div>
+      </div>
+
+      <!-- Metric 2: Latency -->
+      <div class="bg-slate-800/80 border border-slate-700/80 rounded-xl p-4 shadow-sm">
+        <div class="text-xs font-medium text-slate-400 uppercase tracking-wider">Avg Latency (RTT)</div>
+        <div class="flex items-baseline justify-between mt-2">
+          <div class="text-lg font-bold text-blue-400" id="kpiTcpLat">75.0 <span
+              class="text-xs text-slate-400 font-normal">ms</span></div>
+          <div class="text-xs text-slate-400">vs</div>
+          <div class="text-lg font-bold text-emerald-400" id="kpiUdpLat">51.1 <span
+              class="text-xs text-slate-400 font-normal">ms</span></div>
+        </div>
+        <div class="text-[11px] text-slate-400 mt-1">UDP is <strong class="text-emerald-300">~32% lower delay</strong>
+        </div>
+      </div>
+
+      <!-- Metric 3: Packet Loss -->
+      <div class="bg-slate-800/80 border border-slate-700/80 rounded-xl p-4 shadow-sm">
+        <div class="text-xs font-medium text-slate-400 uppercase tracking-wider">App Packet Loss</div>
+        <div class="flex items-baseline justify-between mt-2">
+          <div class="text-lg font-bold text-emerald-400" id="kpiTcpLoss">0.0 <span
+              class="text-xs text-slate-400 font-normal">%</span></div>
+          <div class="text-xs text-slate-400">vs</div>
+          <div class="text-lg font-bold text-rose-400" id="kpiUdpLoss">7.6 <span
+              class="text-xs text-slate-400 font-normal">%</span></div>
+        </div>
+        <div class="text-[11px] text-slate-400 mt-1">TCP guarantees <strong class="text-blue-300">0% Loss (ARQ)</strong>
+        </div>
+      </div>
+
+      <!-- Metric 4: Jitter -->
+      <div class="bg-slate-800/80 border border-slate-700/80 rounded-xl p-4 shadow-sm">
+        <div class="text-xs font-medium text-slate-400 uppercase tracking-wider">Delay Jitter</div>
+        <div class="flex items-baseline justify-between mt-2">
+          <div class="text-lg font-bold text-blue-400" id="kpiTcpJit">9.5 <span
+              class="text-xs text-slate-400 font-normal">ms</span></div>
+          <div class="text-xs text-slate-400">vs</div>
+          <div class="text-lg font-bold text-rose-400" id="kpiUdpJit">11.0 <span
+              class="text-xs text-slate-400 font-normal">ms</span></div>
+        </div>
+        <div class="text-[11px] text-slate-400 mt-1">Inter-arrival variance</div>
+      </div>
+
+      <!-- Metric 5: Delivery Rate -->
+      <div class="bg-slate-800/80 border border-slate-700/80 rounded-xl p-4 shadow-sm col-span-2 sm:col-span-1">
+        <div class="text-xs font-medium text-slate-400 uppercase tracking-wider">Delivery Success</div>
+        <div class="flex items-baseline justify-between mt-2">
+          <div class="text-lg font-bold text-emerald-400">100.0%</div>
+          <div class="text-xs text-slate-400">vs</div>
+          <div class="text-lg font-bold text-amber-400" id="kpiUdpDeliv">92.4%</div>
+        </div>
+        <div class="text-[11px] text-slate-400 mt-1">Observed complete delivery</div>
+      </div>
+    </div>
+
+    <!-- STUDENT LAB PACKET TRANSMISSION DEMO SECTION -->
+    <div class="bg-slate-800/90 border border-slate-700 rounded-xl p-5 shadow-md" id="demoSection">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-700 gap-2">
+        <div>
+          <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+            Protocol Mechanics: Client - Server Transmission Demo
+          </h3>
+          <p class="text-xs text-slate-400 mt-0.5">
+            Test and observe 3-Way Handshake, ARQ Retransmissions (TCP), and Unreliable Datagram Loss (UDP) in
+            real-time.
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span
+            class="text-[11px] px-2.5 py-1 rounded bg-slate-900 border border-slate-700 text-slate-300 font-mono">Socket:
+            192.168.1.10:5201 &rarr; 192.168.1.20:80</span>
+        </div>
+      </div>
+
+      <!-- Interactive Controls Panel -->
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 my-4 bg-slate-900/60 p-3.5 rounded-lg border border-slate-700/60 text-xs">
+        <div>
+          <label class="block font-medium text-slate-300 mb-1">Select Protocol:</label>
+          <div class="flex gap-1.5">
+            <button type="button" id="protoTcpBtn" onclick="selectDemoProtocol('TCP')"
+              class="flex-1 py-1.5 px-2.5 rounded font-bold text-xs border transition bg-blue-600 text-white border-blue-500 shadow-sm">
+              TCP (RFC 793)
+            </button>
+            <button type="button" id="protoUdpBtn" onclick="selectDemoProtocol('UDP')"
+              class="flex-1 py-1.5 px-2.5 rounded font-medium text-xs border transition bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700">
+              UDP (RFC 768)
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-medium text-slate-300 mb-1">Network Link Quality:</label>
+          <select id="demoCondition"
+            class="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+            <option value="ideal">Ideal LAN (0% Line Loss)</option>
+            <option value="moderate" selected>Moderate Congestion (25% Drop Chance)</option>
+            <option value="severe">Severe Loss &amp; Jitter (50% Drop Chance)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-medium text-slate-300 mb-1">Payload Size:</label>
+          <select id="demoPktSize"
+            class="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+            <option value="64">64 Bytes (Small VoIP / ACK)</option>
+            <option value="512">512 Bytes (Standard RPC)</option>
+            <option value="1460" selected>1460 Bytes (Standard Ethernet MSS)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-medium text-slate-300 mb-1">Number of Packets:</label>
+          <select id="demoPacketCount"
+            class="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+            <option value="5" selected>5 Packets (Quick Demo)</option>
+            <option value="10">10 Packets (Extended Demo)</option>
+          </select>
+        </div>
+
+        <div class="flex items-end gap-2">
+          <button id="startDemoBtn" onclick="startPacketSimulation()"
+            class="flex-1 py-1.5 px-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded text-xs transition shadow-md flex items-center justify-center gap-1.5">
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20">
+              <path d="M4 4l12 6-12 6z" />
+            </svg>
+            Send Packets
+          </button>
+          <button onclick="clearDemoLog()"
+            class="py-1.5 px-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium rounded text-xs border border-slate-700 transition">
+            Clear
+          </button>
+        </div>
+      </div>
+
+      <!-- Network Link Animation Track -->
+      <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 relative">
+        <div class="flex items-center justify-between text-xs font-mono text-slate-400 mb-2 px-2">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-blue-500 inline-block"></span>
+            <span class="font-bold text-slate-200">Sender (Client)</span>
+            <span class="text-[11px] text-slate-500">192.168.1.10:5201</span>
+          </div>
+          <div
+            class="px-3 py-0.5 rounded bg-slate-800 text-[11px] text-slate-300 border border-slate-700 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+            Switch / Queue Buffer
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] text-slate-500">192.168.1.20:80</span>
+            <span class="font-bold text-slate-200">Receiver (Server)</span>
+            <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+          </div>
+        </div>
+
+        <!-- Wire Line Track -->
+        <div
+          class="h-12 bg-slate-900 rounded-lg border border-slate-800/80 relative flex items-center px-4 overflow-hidden"
+          id="wireTrack">
+          <!-- Central Router Drop Line -->
+          <div class="absolute left-1/2 -translate-x-1/2 w-0.5 h-full bg-dashed border-r border-slate-700/80 z-0"></div>
+
+          <!-- Animated Packet Element -->
+          <div id="flyingPacket"
+            class="hidden absolute top-2 text-[10px] font-bold px-2 py-0.5 rounded shadow-md z-10 transition-all duration-200">
+            DATA
+          </div>
+
+          <div id="wireIdleText" class="w-full text-center text-xs text-slate-500 font-mono select-none">
+            [Link Idle - Select protocol options above and click 'Send Packets']
+          </div>
+        </div>
+
+        <!-- Live Metrics Counter Strip -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3 pt-3 border-t border-slate-900 text-center text-xs">
+          <div class="bg-slate-900/50 p-2 rounded border border-slate-800">
+            <div class="text-[11px] text-slate-400">Packets Sent</div>
+            <div id="statSent" class="text-base font-bold text-white font-mono">0</div>
+          </div>
+          <div class="bg-slate-900/50 p-2 rounded border border-slate-800">
+            <div class="text-[11px] text-slate-400">Successfully Delivered</div>
+            <div id="statRecv" class="text-base font-bold text-emerald-400 font-mono">0</div>
+          </div>
+          <div class="bg-slate-900/50 p-2 rounded border border-slate-800">
+            <div class="text-[11px] text-slate-400" id="statDropLabel">Retransmissions (ARQ)</div>
+            <div id="statDrops" class="text-base font-bold text-rose-400 font-mono">0</div>
+          </div>
+          <div class="bg-slate-900/50 p-2 rounded border border-slate-800">
+            <div class="text-[11px] text-slate-400">Delivery Success Rate</div>
+            <div id="statSuccess" class="text-base font-bold text-amber-300 font-mono">0%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Student Wireshark-Style Log Output Console -->
+      <div class="mt-4">
+        <div class="flex items-center justify-between text-xs font-semibold text-slate-400 mb-1.5 px-1">
+          <span class="flex items-center gap-1.5 font-mono">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            Packet Capture Console (Wireshark-Style Protocol Trace)
+          </span>
+          <span class="text-[11px] text-slate-500 font-mono">RFC 793 / RFC 768 Logger</span>
+        </div>
+        <div id="terminalLog"
+          class="h-40 bg-black/95 rounded-lg border border-slate-800 p-3 font-mono text-[11px] text-emerald-400 overflow-y-auto space-y-1 shadow-inner select-text">
+          <div class="text-slate-500">// Computer Networks Lab - Live Packet Transmission Terminal</div>
+          <div class="text-slate-500">// Ready to capture Layer-4 Segment handshakes, sequence numbers, and buffer
+            drops.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Tabs -->
+    <div class="bg-slate-800/90 border border-slate-700 rounded-xl overflow-hidden shadow-lg">
+      <div class="border-b border-slate-700 bg-slate-900/60 px-4 flex gap-2">
+        <button onclick="switchTab('tabCharts')" id="btnTabCharts"
+          class="px-4 py-3 text-sm font-medium border-b-2 border-blue-500 text-blue-400 transition">Visual Analytics
+          (ggplot2)</button>
+        <button onclick="switchTab('tabStats')" id="btnTabStats"
+          class="px-4 py-3 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">Inferential
+          Statistics &amp; Tests</button>
+        <button onclick="switchTab('tabData')" id="btnTabData"
+          class="px-4 py-3 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">Experimental
+          Dataset (240 Rows)</button>
+        <button onclick="switchTab('tabViva')" id="btnTabViva"
+          class="px-4 py-3 text-sm font-medium border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">Viva
+          Voce Q&amp;A Cheat Sheet</button>
+      </div>
+
+      <!-- TAB 1: Visual Analytics -->
+      <div id="tabCharts" class="p-5 space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <!-- Chart 1: Throughput Bar Comparison -->
+          <div class="bg-slate-900/70 border border-slate-700/80 rounded-xl p-4">
+            <h4 class="text-sm font-semibold text-slate-200 mb-1 flex items-center justify-between">
+              <span>Throughput by Environment (Mbps)</span>
+              <span class="text-[11px] text-slate-400 font-normal">Higher is better &uarr;</span>
+            </h4>
+            <p class="text-xs text-slate-400 mb-3">Comparing effective throughput across network environments</p>
+            <div class="space-y-3 pt-2">
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-slate-300">Ideal LAN</span>
+                  <span class="text-slate-400">TCP: 67.2 Mbps | UDP: 69.1 Mbps</span>
+                </div>
+                <div class="w-full bg-slate-800 h-3 rounded overflow-hidden flex gap-0.5">
+                  <div class="bg-blue-500 h-full rounded-l" style="width: 67.2%;"></div>
+                  <div class="bg-rose-500 h-full rounded-r" style="width: 69.1%;"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-slate-300">Moderate Congestion</span>
+                  <span class="text-slate-400">TCP: 38.0 Mbps | UDP: 44.4 Mbps</span>
+                </div>
+                <div class="w-full bg-slate-800 h-3 rounded overflow-hidden flex gap-0.5">
+                  <div class="bg-blue-500 h-full rounded-l" style="width: 38.0%;"></div>
+                  <div class="bg-rose-500 h-full rounded-r" style="width: 44.4%;"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-slate-300">Severe Loss &amp; High Jitter</span>
+                  <span class="text-slate-400">TCP: 12.3 Mbps | UDP: 21.8 Mbps</span>
+                </div>
+                <div class="w-full bg-slate-800 h-3 rounded overflow-hidden flex gap-0.5">
+                  <div class="bg-blue-500 h-full rounded-l" style="width: 12.3%;"></div>
+                  <div class="bg-rose-500 h-full rounded-r" style="width: 21.8%;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-4 text-xs text-slate-400 mt-4 pt-2 border-t border-slate-800">
+              <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-blue-500 rounded"></span> TCP</span>
+              <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-rose-500 rounded"></span> UDP</span>
+            </div>
+          </div>
+
+          <!-- Chart 2: Latency Comparison -->
+          <div class="bg-slate-900/70 border border-slate-700/80 rounded-xl p-4">
+            <h4 class="text-sm font-semibold text-slate-200 mb-1 flex items-center justify-between">
+              <span>Round-Trip Latency Inflation (ms)</span>
+              <span class="text-[11px] text-slate-400 font-normal">Lower is better &darr;</span>
+            </h4>
+            <p class="text-xs text-slate-400 mb-3">Latency surges under TCP retransmissions &amp; head-of-line blocking
+            </p>
+            <div class="space-y-3 pt-2">
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-slate-300">Ideal LAN</span>
+                  <span class="text-slate-400">TCP: 2.5 ms | UDP: 2.1 ms</span>
+                </div>
+                <div class="w-full bg-slate-800 h-3 rounded overflow-hidden flex gap-0.5">
+                  <div class="bg-blue-500 h-full rounded-l" style="width: 1.5%;"></div>
+                  <div class="bg-rose-500 h-full rounded-r" style="width: 1.2%;"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-slate-300">Moderate Congestion</span>
+                  <span class="text-slate-400">TCP: 54.2 ms | UDP: 37.6 ms</span>
+                </div>
+                <div class="w-full bg-slate-800 h-3 rounded overflow-hidden flex gap-0.5">
+                  <div class="bg-blue-500 h-full rounded-l" style="width: 32%;"></div>
+                  <div class="bg-rose-500 h-full rounded-r" style="width: 22%;"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-slate-300">Severe Loss &amp; Jitter</span>
+                  <span class="text-slate-400">TCP: 168.3 ms | UDP: 113.7 ms</span>
+                </div>
+                <div class="w-full bg-slate-800 h-3 rounded overflow-hidden flex gap-0.5">
+                  <div class="bg-blue-500 h-full rounded-l" style="width: 100%;"></div>
+                  <div class="bg-rose-500 h-full rounded-r" style="width: 67%;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-4 text-xs text-slate-400 mt-4 pt-2 border-t border-slate-800">
+              <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-blue-500 rounded"></span> TCP (ARQ
+                Penalized)</span>
+              <span class="flex items-center gap-1.5"><span class="w-3 h-3 bg-rose-500 rounded"></span> UDP (Zero Wait
+                State)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: Inferential Statistics -->
+      <div id="tabStats" class="p-5 hidden space-y-5">
+        <h3 class="text-base font-bold text-white">Inferential Hypothesis Testing (Matched Pairs Design)</h3>
+        <p class="text-xs text-slate-400">
+          Because each experimental trial pairs TCP and UDP under matched network conditions, a <strong>Paired Student's
+            t-test</strong> is conducted ($df = 119, \alpha = 0.05$).
+        </p>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left text-slate-300 border border-slate-700 rounded-lg">
+            <thead class="bg-slate-900 text-slate-400 uppercase font-semibold">
+              <tr>
+                <th class="p-3 border-b border-slate-700">Tested Performance Metric</th>
+                <th class="p-3 border-b border-slate-700">TCP Mean</th>
+                <th class="p-3 border-b border-slate-700">UDP Mean</th>
+                <th class="p-3 border-b border-slate-700">Mean Difference (&Delta;)</th>
+                <th class="p-3 border-b border-slate-700">Paired t-Statistic</th>
+                <th class="p-3 border-b border-slate-700">p-Value</th>
+                <th class="p-3 border-b border-slate-700">95% Conf. Interval</th>
+                <th class="p-3 border-b border-slate-700">Significant?</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800 bg-slate-950/40 font-mono">
+              <tr class="hover:bg-slate-800/40">
+                <td class="p-3 font-semibold text-slate-200 font-sans">Throughput (Mbps)</td>
+                <td class="p-3 text-blue-400">39.15</td>
+                <td class="p-3 text-rose-400">45.11</td>
+                <td class="p-3 text-amber-300">-5.96</td>
+                <td class="p-3">-10.773</td>
+                <td class="p-3 text-emerald-400">&lt; 0.001</td>
+                <td class="p-3">[-7.04, -4.88]</td>
+                <td class="p-3 font-sans"><span
+                    class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Yes (p
+                    &lt; 0.05)</span></td>
+              </tr>
+              <tr class="hover:bg-slate-800/40">
+                <td class="p-3 font-semibold text-slate-200 font-sans">Latency (ms)</td>
+                <td class="p-3 text-blue-400">74.97</td>
+                <td class="p-3 text-rose-400">51.11</td>
+                <td class="p-3 text-amber-300">+23.87</td>
+                <td class="p-3">11.051</td>
+                <td class="p-3 text-emerald-400">&lt; 0.001</td>
+                <td class="p-3">[+19.63, +28.10]</td>
+                <td class="p-3 font-sans"><span
+                    class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Yes (p
+                    &lt; 0.05)</span></td>
+              </tr>
+              <tr class="hover:bg-slate-800/40">
+                <td class="p-3 font-semibold text-slate-200 font-sans">Jitter (ms)</td>
+                <td class="p-3 text-blue-400">9.47</td>
+                <td class="p-3 text-rose-400">11.02</td>
+                <td class="p-3 text-amber-300">-1.55</td>
+                <td class="p-3">-4.213</td>
+                <td class="p-3 text-emerald-400">&lt; 0.001</td>
+                <td class="p-3">[-2.27, -0.83]</td>
+                <td class="p-3 font-sans"><span
+                    class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Yes (p
+                    &lt; 0.05)</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 3: Dataset Explorer -->
+      <div id="tabData" class="p-5 hidden space-y-4">
+        <div class="flex justify-between items-center">
+          <h3 class="text-sm font-bold text-white">Cleaned Experimental Records (Sample View)</h3>
+          <span class="text-xs text-slate-400">Showing sample of 240 observations</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left text-slate-300 border border-slate-700 rounded-lg">
+            <thead class="bg-slate-900 text-slate-400 uppercase font-semibold">
+              <tr>
+                <th class="p-2.5">Obs ID</th>
+                <th class="p-2.5">Trial</th>
+                <th class="p-2.5">Proto</th>
+                <th class="p-2.5">Size (B)</th>
+                <th class="p-2.5">Condition</th>
+                <th class="p-2.5">Throughput</th>
+                <th class="p-2.5">Latency</th>
+                <th class="p-2.5">Loss (%)</th>
+                <th class="p-2.5">Delivery (%)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800 font-mono text-[11px] bg-slate-950/40">
+              <tr>
+                <td class="p-2 text-slate-400">OBS_001</td>
+                <td>TR_001</td>
+                <td class="text-blue-400 font-bold">TCP</td>
+                <td>64</td>
+                <td>Ideal_LAN</td>
+                <td>29.98 Mbps</td>
+                <td>2.67 ms</td>
+                <td>0.00%</td>
+                <td class="text-emerald-400">100.0%</td>
+              </tr>
+              <tr>
+                <td class="p-2 text-slate-400">OBS_002</td>
+                <td>TR_001</td>
+                <td class="text-rose-400 font-bold">UDP</td>
+                <td>64</td>
+                <td>Ideal_LAN</td>
+                <td>31.42 Mbps</td>
+                <td>2.01 ms</td>
+                <td>0.00%</td>
+                <td class="text-emerald-400">100.0%</td>
+              </tr>
+              <tr>
+                <td class="p-2 text-slate-400">OBS_003</td>
+                <td>TR_002</td>
+                <td class="text-blue-400 font-bold">TCP</td>
+                <td>512</td>
+                <td>Ideal_LAN</td>
+                <td>63.15 Mbps</td>
+                <td>2.45 ms</td>
+                <td>0.00%</td>
+                <td class="text-emerald-400">100.0%</td>
+              </tr>
+              <tr>
+                <td class="p-2 text-slate-400">OBS_004</td>
+                <td>TR_002</td>
+                <td class="text-rose-400 font-bold">UDP</td>
+                <td>512</td>
+                <td>Ideal_LAN</td>
+                <td>66.80 Mbps</td>
+                <td>1.92 ms</td>
+                <td>0.00%</td>
+                <td class="text-emerald-400">100.0%</td>
+              </tr>
+              <tr>
+                <td class="p-2 text-slate-400">OBS_081</td>
+                <td>TR_041</td>
+                <td class="text-blue-400 font-bold">TCP</td>
+                <td>1460</td>
+                <td>Moderate</td>
+                <td>62.40 Mbps</td>
+                <td>52.10 ms</td>
+                <td>0.00%</td>
+                <td class="text-emerald-400">100.0%</td>
+              </tr>
+              <tr>
+                <td class="p-2 text-slate-400">OBS_082</td>
+                <td>TR_041</td>
+                <td class="text-rose-400 font-bold">UDP</td>
+                <td>1460</td>
+                <td>Moderate</td>
+                <td>71.15 Mbps</td>
+                <td>36.40 ms</td>
+                <td>4.12%</td>
+                <td class="text-amber-400">95.88%</td>
+              </tr>
+              <tr>
+                <td class="p-2 text-slate-400">OBS_161</td>
+                <td>TR_081</td>
+                <td class="text-blue-400 font-bold">TCP</td>
+                <td>1460</td>
+                <td>Severe</td>
+                <td>25.10 Mbps</td>
+                <td>154.20 ms</td>
+                <td>0.00%</td>
+                <td class="text-emerald-400">100.0%</td>
+              </tr>
+              <tr>
+                <td class="p-2 text-slate-400">OBS_162</td>
+                <td>TR_081</td>
+                <td class="text-rose-400 font-bold">UDP</td>
+                <td>1460</td>
+                <td>Severe</td>
+                <td>42.30 Mbps</td>
+                <td>104.50 ms</td>
+                <td>17.40%</td>
+                <td class="text-rose-400">82.60%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 4: Viva Voce Cheat Sheet -->
+      <div id="tabViva" class="p-5 hidden space-y-4">
+        <h3 class="text-base font-bold text-white">High-Frequency Viva Voce Questions &amp; Model Answers</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-slate-900/60 border border-slate-700/80 rounded-lg p-3">
+            <h4 class="text-xs font-bold text-blue-400 uppercase">Q1. Why is UDP latency lower under network congestion?
+            </h4>
+            <p class="text-xs text-slate-300 mt-1">
+              TCP enforces strict in-order delivery. When packets drop, TCP halts delivery and enters Retransmission
+              Timeouts (Head-of-Line blocking). UDP drops packets permanently and passes surviving packets immediately
+              without delay.
+            </p>
+          </div>
+          <div class="bg-slate-900/60 border border-slate-700/80 rounded-lg p-3">
+            <h4 class="text-xs font-bold text-blue-400 uppercase">Q2. Why does throughput increase with larger packet
+              sizes?</h4>
+            <p class="text-xs text-slate-300 mt-1">
+              Due to header-to-payload amortization. An IPv4/TCP header is 40 bytes. In a 64-byte packet, the header
+              consumes 62.5% of transmission bandwidth. In a 1460-byte MSS segment, the header is only 2.7%, yielding
+              >97% useful data throughput.
+            </p>
+          </div>
+          <div class="bg-slate-900/60 border border-slate-700/80 rounded-lg p-3">
+            <h4 class="text-xs font-bold text-blue-400 uppercase">Q3. What is the difference between Flow Control and
+              Congestion Control?</h4>
+            <p class="text-xs text-slate-300 mt-1">
+              Flow control protects the receiver from buffer overflow (advertised via <code>rwnd</code>). Congestion
+              control protects the intermediate network routers from queue collapse (managed via <code>cwnd</code> using
+              Slow Start and AIMD).
+            </p>
+          </div>
+          <div class="bg-slate-900/60 border border-slate-700/80 rounded-lg p-3">
+            <h4 class="text-xs font-bold text-blue-400 uppercase">Q4. Why use a Paired t-test instead of Independent
+              t-test?</h4>
+            <p class="text-xs text-slate-300 mt-1">
+              Our experiment is a matched-pairs design. Trial <code>TR_001</code> evaluates both TCP and UDP under
+              identical background network conditions and packet sizes. A paired t-test tests within-pair differences,
+              eliminating extraneous noise.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-slate-500 py-2">
+      TCP vs UDP Performance Analysis Benchmark &bull; Student Project &bull; Fully reproducible with R &amp; Python
+    </footer>
+  </div>
+
+  <script>
+    function switchTab(tabId) {
+      const tabs = ['tabCharts', 'tabStats', 'tabData', 'tabViva'];
+      const btns = ['btnTabCharts', 'btnTabStats', 'btnTabData', 'btnTabViva'];
+      tabs.forEach(t => document.getElementById(t).classList.add('hidden'));
+      btns.forEach(b => {
+        document.getElementById(b).classList.remove('border-blue-500', 'text-blue-400');
+        document.getElementById(b).classList.add('border-transparent', 'text-slate-400');
+      });
+      document.getElementById(tabId).classList.remove('hidden');
+      const activeBtn = 'btn' + tabId.charAt(0).toUpperCase() + tabId.slice(1);
+      document.getElementById(activeBtn).classList.add('border-blue-500', 'text-blue-400');
+      document.getElementById(activeBtn).classList.remove('border-transparent', 'text-slate-400');
+    }
+
+    // Student Lab Packet Transmission Demo Script
+    let currentDemoProto = 'TCP';
+    let isTransmitting = false;
+
+    function selectDemoProtocol(proto) {
+      if (isTransmitting) return;
+      currentDemoProto = proto;
+      const tcpBtn = document.getElementById('protoTcpBtn');
+      const udpBtn = document.getElementById('protoUdpBtn');
+      const dropLabel = document.getElementById('statDropLabel');
+
+      if (proto === 'TCP') {
+        tcpBtn.className = 'flex-1 py-1.5 px-2.5 rounded font-bold text-xs border transition bg-blue-600 text-white border-blue-500 shadow-sm';
+        udpBtn.className = 'flex-1 py-1.5 px-2.5 rounded font-medium text-xs border transition bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700';
+        dropLabel.textContent = 'Retransmissions (ARQ)';
+      } else {
+        udpBtn.className = 'flex-1 py-1.5 px-2.5 rounded font-bold text-xs border transition bg-rose-600 text-white border-rose-500 shadow-sm';
+        tcpBtn.className = 'flex-1 py-1.5 px-2.5 rounded font-medium text-xs border transition bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700';
+        dropLabel.textContent = 'Permanently Lost';
+      }
+      logMessage(`[SELECT] Protocol switched to ${proto}. Ready to transmit.`, 'text-blue-300');
+    }
+
+    function logMessage(msg, colorClass = 'text-emerald-400') {
+      const logBox = document.getElementById('terminalLog');
+      const now = new Date();
+      const timeStr = String(now.getSeconds()).padStart(2, '0') + '.' + String(Math.floor(now.getMilliseconds() / 10)).padStart(2, '0');
+      const line = document.createElement('div');
+      line.className = colorClass;
+      line.textContent = `[+${timeStr}] ${msg}`;
+      logBox.appendChild(line);
+      logBox.scrollTop = logBox.scrollHeight;
+    }
+
+    function clearDemoLog() {
+      const logBox = document.getElementById('terminalLog');
+      logBox.innerHTML = '<div class="text-slate-500">// Terminal packet log reset. Ready for new transmission test.</div>';
+      document.getElementById('statSent').textContent = '0';
+      document.getElementById('statRecv').textContent = '0';
+      document.getElementById('statDrops').textContent = '0';
+      document.getElementById('statSuccess').textContent = '0%';
+    }
+
+    const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+    async function startPacketSimulation() {
+      if (isTransmitting) return;
+      isTransmitting = true;
+
+      const startBtn = document.getElementById('startDemoBtn');
+      const condition = document.getElementById('demoCondition').value;
+      const count = parseInt(document.getElementById('demoPacketCount').value, 10);
+      const pktSize = document.getElementById('demoPktSize').value;
+      const pktEl = document.getElementById('flyingPacket');
+      const idleText = document.getElementById('wireIdleText');
+
+      startBtn.disabled = true;
+      startBtn.classList.add('opacity-50');
+      idleText.classList.add('hidden');
+
+      let dropProb = 0.0;
+      if (condition === 'moderate') dropProb = 0.25;
+      if (condition === 'severe') dropProb = 0.50;
+
+      clearDemoLog();
+      logMessage(`>>> STARTING TRANSMISSION: ${currentDemoProto} | ${count} Packets | ${pktSize}B Payload | Link: ${condition.toUpperCase()}`, 'text-amber-300 font-bold');
+
+      let sent = 0;
+      let recv = 0;
+      let drops = 0;
+
+      async function animatePacket(text, bgClass, fromPct, toPct, durationMs) {
+        pktEl.textContent = text;
+        pktEl.className = `absolute top-2 text-[10px] font-bold px-2.5 py-1 rounded shadow-md z-10 ${bgClass}`;
+        pktEl.style.left = `${fromPct}%`;
+        pktEl.classList.remove('hidden');
+
+        const startTime = performance.now();
+        return new Promise(resolve => {
+          function step(now) {
+            const elapsed = now - startTime;
+            const progress = Math.min(elapsed / durationMs, 1);
+            const curLeft = fromPct + (toPct - fromPct) * progress;
+            pktEl.style.left = `${curLeft}%`;
+            if (progress < 1) {
+              requestAnimationFrame(step);
+            } else {
+              resolve();
+            }
+          }
+          requestAnimationFrame(step);
+        });
+      }
+
+      // 1. Handshake Phase for TCP
+      if (currentDemoProto === 'TCP') {
+        logMessage(`[HANDSHAKE 1/3] Client:5201 -> Server:80 [SYN, Seq=0, Win=65535, MSS=1460]`, 'text-sky-300');
+        await animatePacket('SYN', 'bg-blue-500 text-white', 5, 85, 300);
+        await sleep(60);
+
+        logMessage(`[HANDSHAKE 2/3] Server:80 -> Client:5201 [SYN-ACK, Seq=0, Ack=1]`, 'text-sky-300');
+        await animatePacket('SYN-ACK', 'bg-cyan-500 text-slate-950', 85, 5, 300);
+        await sleep(60);
+
+        logMessage(`[HANDSHAKE 3/3] Client:5201 -> Server:80 [ACK, Seq=1, Ack=1] -> Handshake Complete!`, 'text-emerald-300 font-bold');
+        await animatePacket('ACK', 'bg-blue-600 text-white', 5, 85, 250);
+        await sleep(120);
+      } else {
+        logMessage(`[UDP MODE] Connectionless socket (RFC 768). Zero handshake delay. Transmitting immediately!`, 'text-rose-300 font-bold');
+        await sleep(150);
+      }
+
+      // 2. Data Transmission Loop
+      for (let i = 1; i <= count; i++) {
+        sent++;
+        document.getElementById('statSent').textContent = sent;
+        const seqNum = (i - 1) * parseInt(pktSize, 10) + 1;
+        const willDrop = Math.random() < dropProb;
+
+        if (currentDemoProto === 'TCP') {
+          logMessage(`[TCP DATA] Client -> Server: Segment #${i} [Seq=${seqNum}, Len=${pktSize}B]`, 'text-blue-300');
+
+          if (willDrop) {
+            drops++;
+            document.getElementById('statDrops').textContent = drops;
+            await animatePacket(`Pkt #${i}`, 'bg-blue-500 text-white', 5, 45, 250);
+            pktEl.className = 'absolute top-2 text-[10px] font-bold px-2 py-0.5 rounded shadow-md z-10 bg-rose-600 text-white';
+            logMessage(`[BUFFER DROP] Router queue overflow! Segment #${i} [Seq=${seqNum}] dropped.`, 'text-rose-400 font-bold');
+            await sleep(350);
+
+            // Retransmission
+            logMessage(`[ARQ TIMER] RTO Expired! Client retransmitting Segment #${i} [Seq=${seqNum}]...`, 'text-amber-400 font-bold');
+            await animatePacket(`RETRANS #${i}`, 'bg-amber-500 text-slate-950', 5, 85, 350);
+            recv++;
+            document.getElementById('statRecv').textContent = recv;
+            logMessage(`[ACK OK] Server received Segment #${i} -> ACK [Ack=${seqNum + parseInt(pktSize, 10)}]`, 'text-emerald-400');
+            await sleep(80);
+          } else {
+            await animatePacket(`Pkt #${i}`, 'bg-blue-500 text-white', 5, 85, 300);
+            recv++;
+            document.getElementById('statRecv').textContent = recv;
+            logMessage(`[ACK] Server received Segment #${i} -> ACK returned successfully.`, 'text-emerald-400');
+            await sleep(60);
+          }
+        } else {
+          // UDP Mode
+          logMessage(`[UDP DGRAM] Client -> Server: Datagram #${i} [Len=${pktSize}B]`, 'text-rose-300');
+
+          if (willDrop) {
+            drops++;
+            document.getElementById('statDrops').textContent = drops;
+            await animatePacket(`Dgram #${i}`, 'bg-rose-500 text-white', 5, 45, 220);
+            pktEl.className = 'absolute top-2 text-[10px] font-bold px-2 py-0.5 rounded shadow-md z-10 bg-rose-700 text-white';
+            logMessage(`[DGRAM LOST] Datagram #${i} dropped at router buffer. (UDP does NOT retransmit!)`, 'text-rose-400 font-bold');
+            await sleep(250);
+            pktEl.classList.add('hidden');
+          } else {
+            await animatePacket(`Dgram #${i}`, 'bg-rose-500 text-white', 5, 85, 260);
+            recv++;
+            document.getElementById('statRecv').textContent = recv;
+            logMessage(`[DELIVERED] Datagram #${i} delivered to server socket.`, 'text-emerald-400');
+            await sleep(50);
+          }
+        }
+
+        const currentSuccess = Math.round((recv / sent) * 100);
+        document.getElementById('statSuccess').textContent = `${currentSuccess}%`;
+        await sleep(80);
+      }
+
+      pktEl.classList.add('hidden');
+      idleText.classList.remove('hidden');
+      idleText.textContent = `[Test Finished] Protocol: ${currentDemoProto} | Sent: ${sent} | Delivered: ${recv} | Success: ${Math.round((recv / sent) * 100)}%`;
+
+      logMessage(`------------------------------------------------------------------------`, 'text-slate-500');
+      logMessage(`[SUMMARY] Sent: ${sent} | Received: ${recv} | Drops/Retransmits: ${drops} | Success: ${Math.round((recv / sent) * 100)}%`, 'text-white font-bold');
+
+      if (currentDemoProto === 'TCP') {
+        logMessage(`[VIVA CONCLUSION] TCP achieved 100% application delivery via ARQ retransmission, but incurred extra delay.`, 'text-sky-300');
+      } else {
+        logMessage(`[VIVA CONCLUSION] UDP sent faster with zero handshake, but dropped packets were permanently lost.`, 'text-amber-300');
+      }
+
+      startBtn.disabled = false;
+      startBtn.classList.remove('opacity-50');
+      isTransmitting = false;
+    }
+  </script>
+</body>
+
+</html>

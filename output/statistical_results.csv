@@ -1,0 +1,4 @@
+Metric,TCP_Mean,UDP_Mean,Mean_Difference,Paired_t_Statistic,p_Value,CI_95_Lower,CI_95_Upper,Statistically_Significant
+Throughput (Mbps),39.15,45.11,-5.96,-10.773,< 0.001,-7.043,-4.875,Yes (p < 0.05)
+Latency (ms),74.97,51.11,23.87,11.051,< 0.001,19.634,28.1,Yes (p < 0.05)
+Jitter (ms),9.47,11.02,-1.55,-4.213,< 0.001,-2.267,-0.827,Yes (p < 0.05)

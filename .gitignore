@@ -1,0 +1,19 @@
+# R environment files
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Operating system files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# Temporary log folders if any
+real_world_iperf3/raw_logs/*.json

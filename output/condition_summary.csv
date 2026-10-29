@@ -1,0 +1,7 @@
+network_condition,protocol,Trials,Mean_Throughput,SD_Throughput,Mean_Latency,SD_Latency,Mean_Packet_Loss,Mean_Jitter,SD_Jitter,Mean_Delivery_Rate
+Ideal_LAN,TCP,40,67.2,23.75,2.46,0.38,0.0,0.49,0.18,100.0
+Ideal_LAN,UDP,40,69.07,24.37,2.08,0.41,0.0,0.38,0.14,100.0
+Moderate_Congestion,TCP,40,37.96,15.67,54.22,4.53,0.0,6.39,1.25,100.0
+Moderate_Congestion,UDP,40,44.43,17.1,37.57,3.74,4.54,7.54,1.75,95.45
+Severe_Loss_High_Jitter,TCP,40,12.29,6.58,168.25,14.52,0.0,21.54,3.78,100.0
+Severe_Loss_High_Jitter,UDP,40,21.83,10.52,113.67,11.78,18.38,25.14,3.96,81.61

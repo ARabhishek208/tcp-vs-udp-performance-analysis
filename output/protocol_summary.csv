@@ -1,0 +1,3 @@
+protocol,Observations,Mean_Throughput,Median_Throughput,SD_Throughput,Mean_Latency,Median_Latency,SD_Latency,Mean_Packet_Loss,Max_Packet_Loss,Mean_Jitter,Median_Jitter,SD_Jitter,Mean_Delivery_Rate
+TCP,120,39.15,31.22,28.05,74.97,54.05,70.09,0.0,0.0,9.47,6.38,9.19,100.0
+UDP,120,45.11,39.04,26.5,51.11,37.26,47.28,7.64,23.91,11.02,7.08,10.74,92.36
