@@ -1,11 +1,18 @@
 # TCP vs UDP Protocol Performance Analysis Using R Programming
 
 > **Subtitle:** A Comparative Study of Throughput, Latency, Packet Loss, Jitter, and Reliability  
-> **Target Audience:** Bachelor of Computer Applications (BCA) – 3rd Year Final Academic Project  
-> **Academic Subject Integration:**
-> 1. Introduction to Data Communication and Computer Networks (IDCCN)
-> 2. R Programming Language
-> 3. Computational Data Analytics (CDA)
+> **Course:** Academic Project in Computer Networks & Computational Data Analytics  
+> **Core Disciplines:** Introduction to Data Communication and Computer Networks (IDCCN) &bull; R Programming Language &bull; Computational Data Analytics (CDA)
+
+[![Live Web Demo](https://img.shields.io/badge/Live_Demo-Launch_Dashboard-emerald?style=for-the-badge&logo=google-chrome&logoColor=white)](https://arabhishek208.github.io/tcp-vs-udp-performance-analysis/)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-blue?style=for-the-badge&logo=github)](https://github.com/ARabhishek208/tcp-vs-udp-performance-analysis)
+[![Language](https://img.shields.io/badge/R-276DC3?style=for-the-badge&logo=r&logoColor=white)](https://www.r-project.org/)
+
+---
+
+## 🌐 Live Interactive Web Dashboard
+You can run and test the complete interactive simulation and packet capture directly on the web:  
+👉 **[Launch Live Web Dashboard](https://arabhishek208.github.io/tcp-vs-udp-performance-analysis/)**
 
 ---
 
@@ -25,7 +32,12 @@ This project bridges **networking theory** with **practical computational data a
 tcp_udp_performance_analysis/
 │
 ├── README.md                           <- Master project manual & execution guide
-├── main.R                              <- Master orchestrator (Installs pkgs, runs pipeline)
+├── index.html                          <- Live Interactive Web Dashboard (GitHub Pages)
+├── dashboard.html                      <- Standalone interactive simulation app
+├── start_web.bat                       <- 1-Click launcher for local web server
+├── run.bat                             <- 1-Click master pipeline execution batch file
+├── run_project.py                      <- Standalone computational analytics engine
+├── main.R                              <- Master orchestrator (checks pkgs, runs pipeline)
 ├── generate_data.R                     <- Reproducible synthetic dataset generator (Seed 42)
 ├── analyze_data.R                      <- Data cleaning, summary stats, inferential t-tests
 ├── plots.R                             <- High-resolution ggplot2 visualization generator
@@ -59,11 +71,27 @@ tcp_udp_performance_analysis/
 
 ---
 
-## 3. Software Requirements & Setup
+## 3. Key Visualizations
+
+| Throughput Comparison (Mbps) | Latency Inflation (ms) |
+| :---: | :---: |
+| ![Throughput](output/throughput_comparison.png) | ![Latency](output/latency_comparison.png) |
+
+| Packet Loss Rate (%) | Jitter Variation (ms) |
+| :---: | :---: |
+| ![Packet Loss](output/packet_loss_comparison.png) | ![Jitter](output/jitter_comparison.png) |
+
+| MTU Packet Size Scaling | Holistic Multi-Metric Facet |
+| :---: | :---: |
+| ![Packet Size](output/packet_size_comparison.png) | ![Condition Overview](output/network_condition_comparison.png) |
+
+---
+
+## 4. Software Requirements & Setup
 
 ### Requirements
 - **R**: Version 4.0.0 or higher (Free from [CRAN](https://cran.r-project.org/)).
-- **RStudio Desktop**: (Recommended IDE, free from [Posit](https://posit.co/download/rstudio-desktop/)) or VS Code with R extension.
+- **RStudio Desktop**: (Recommended IDE, free from [Posit](https://posit.co/download/rstudio-desktop/)).
 - **R Packages**: `ggplot2`, `dplyr`, `readr`, `tidyr`, and optionally `shiny`.
 - No paid software, cloud subscriptions, or database servers required.
 
@@ -74,50 +102,40 @@ install.packages(c("ggplot2", "dplyr", "readr", "tidyr", "shiny"))
 
 ---
 
-## 4. How to Run the Project (Step-by-Step)
+## 5. How to Run the Project (Step-by-Step)
 
-### Option A: From RStudio (Recommended)
-1. Open RStudio.
-2. Go to **File -> Open Project...** or set your working directory to this folder:
+### Option A: Open the Web Dashboard (Instant)
+- Double-click `index.html` or run `start_web.bat`.
+- Or visit the [Live GitHub Pages Deployment](https://arabhishek208.github.io/tcp-vs-udp-performance-analysis/).
+
+### Option B: From RStudio (Recommended for Viva)
+1. Open RStudio and set working directory:
    ```R
    setwd("c:/Users/hp/Desktop/integrated")
    ```
-3. Open `main.R` in the editor.
-4. Click the **Source** button (top right of editor) or press `Ctrl + Shift + S`.
-5. Observe the automated package check, dataset verification, statistical calculations, and chart generation in the Console.
-6. Open the `output/` folder to view the generated CSVs, PNG charts, and `analysis_report.txt`.
+2. Open `main.R` and click **Source** (`Ctrl + Shift + S`).
+3. Output CSVs and high-resolution PNG charts will be saved to the `output/` directory.
 
-### Option B: From Command Prompt / PowerShell (Windows)
-```powershell
-cd c:\Users\hp\Desktop\integrated
-Rscript main.R
-```
-
-### Option C: Launching the Interactive Shiny Dashboard
-```R
-# Inside RStudio, open app.R and click "Run App", or run:
-shiny::runApp("app.R")
-```
+### Option C: Run 1-Click Batch File (Windows)
+- Double-click `run.bat` in File Explorer.
 
 ---
 
-## 5. Performance Parameters Analyzed
+## 6. Experimental Results & Statistical Tests
 
-| Metric | Formula | Unit | Preferred Direction | Networking Significance |
-| :--- | :--- | :---: | :---: | :--- |
-| **Throughput** | $\frac{\text{Packets Received} \times \text{Size (Bytes)} \times 8}{\text{Time (s)} \times 10^6}$ | Mbps | Higher $\uparrow$ | Effective data transmission rate delivered to application. |
-| **Latency (RTT)** | $T_{\text{receipt}} - T_{\text{send}}$ | ms | Lower $\downarrow$ | Delay incurred in traversing the link, including queueing and retransmission. |
-| **Packet Loss** | $\frac{\text{Sent} - \text{Received}}{\text{Sent}} \times 100\%$ | % | Lower $\downarrow$ | Proportion of datagrams dropped by router buffer overflows or line noise. |
-| **Jitter** | $|D_{i} - D_{i-1}|$ (Inter-arrival variation) | ms | Lower $\downarrow$ | Variation in delay affecting real-time audio/video buffer underrun. |
-| **Reliability** | $\frac{\text{Delivered distinct packets}}{\text{Offered distinct packets}} \times 100\%$ | % | Higher $\uparrow$ | Transport protocol guarantee of complete and ordered delivery. |
+### Global Summary
+| Protocol | Observations | Mean Throughput | Mean Latency | Mean Loss | Mean Delivery Success |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| **TCP** | 120 | **39.15 Mbps** | **74.97 ms** | **0.00%** | **100.00%** |
+| **UDP** | 120 | **45.11 Mbps** | **51.11 ms** | **7.64%** | **92.36%** |
+
+### Inferential Hypothesis Testing (Paired t-test, $df = 119, \alpha = 0.05$)
+- **Latency Difference:** Mean difference of $+23.87 \text{ ms}$ ($t = 11.051$, $p < 0.001$). Statistically significant; TCP incurs severe delay penalties under congestion due to ARQ retransmissions and Head-of-Line blocking.
+- **Throughput Difference:** Mean difference of $-5.96 \text{ Mbps}$ ($t = -10.773$, $p < 0.001$). Under severe congestion, TCP reduces its Congestion Window ($cwnd$), dropping throughput to 12.29 Mbps, while UDP continues unmitigated transmissions.
 
 ---
 
-## 6. Key Scientific Findings
-
-1. **Throughput Parity on Ideal Links**: Under LAN conditions without line noise, both protocols saturate the link (>90 Mbps), with UDP marginally higher due to an 8-byte header vs TCP's 20–40 bytes.
-2. **TCP Congestion Degradation**: Under severe loss and jitter, TCP throughput plummets to ~19.5 Mbps (a ~78% drop) due to Multiplicative Decrease and Retransmission Timeouts (RTO), resetting its congestion window ($cwnd$).
-3. **UDP Latency Superiority Under Loss**: UDP latency remains low (~98 ms) even under severe loss because it drops lost packets and never stalls. In contrast, TCP latency surges to >135 ms due to head-of-line blocking and ARQ wait states.
-4. **Reliability Paradox**: TCP guarantees **100.0%** delivery to the application across all environments. UDP delivery drops to **81.6%** in severe conditions.
-5. **Packet Size Efficiency**: Both protocols gain ~400% higher throughput moving from 64-byte to 1460-byte packets, proving that larger payload sizes amortize per-packet header overhead.
-
+## 7. Viva Voce & Academic Documentation
+- 📄 **Full University Project Report:** [report/project_report.md](report/project_report.md) (All 19 required chapters).
+- 🎓 **Viva Questions & Demonstration Script:** [report/viva_questions_answers.md](report/viva_questions_answers.md) (30 high-frequency Q&As).
+- 🔬 **Real-World Hardware Testing Suite:** [real_world_iperf3/](real_world_iperf3/) (`iperf3` automation scripts).
